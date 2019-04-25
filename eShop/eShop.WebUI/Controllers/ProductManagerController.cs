@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using eShop.Core.Models;
+using eShop.Core.ViewModels;
 using eShop.DataAccess.InMemory;
 
 namespace eShop.WebUI.Controllers
@@ -11,10 +12,12 @@ namespace eShop.WebUI.Controllers
     public class ProductManagerController : Controller
     {
         ProductRepository context;
+        ProductCategoryRepository contextProductCategory;
 
         public ProductManagerController()
         {
             context = new ProductRepository();
+            contextProductCategory = new ProductCategoryRepository();
         }
 
         // GET: Product
@@ -26,8 +29,12 @@ namespace eShop.WebUI.Controllers
 
         public ActionResult Create()
         {
-            Product product = new Product();
-            return View(product);
+            ProductManagerViewModel viewModel = new ProductManagerViewModel();
+
+            viewModel.Product = new Product();
+            viewModel.ProductCategories = contextProductCategory.Collection();
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -49,13 +56,13 @@ namespace eShop.WebUI.Controllers
             Product product = context.Find(Id);
 
             if (product == null)
-            {
                 return HttpNotFound();
-            }
-            else
-            {
-                return View(product);
-            }
+
+            ProductManagerViewModel viewModel = new ProductManagerViewModel();
+            viewModel.Product = product;
+            viewModel.ProductCategories = contextProductCategory.Collection();
+
+            return View(viewModel);
 
         }
 
