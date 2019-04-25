@@ -34,14 +34,21 @@ namespace eShop.DataAccess.InMemory
             products.Add(p);
         }
 
-        public void Update(Product product)
+        public void Update(Product product, string Id)
         {
-            Product productToUpdate = products.Find(p => p.Id == product.Id);
+            Product productToUpdate = products.Find(p => p.Id == Id);
 
             if (productToUpdate == null)
             {
                 throw new Exception("No product to update!");
             }
+
+            productToUpdate.Id = product.Id;
+            productToUpdate.Name = product.Name;
+            productToUpdate.Description = product.Description;
+            productToUpdate.Category = product.Category;
+            productToUpdate.Price = product.Price;
+            productToUpdate.Image = product.Image;
         }
 
         public Product Find(string Id)
